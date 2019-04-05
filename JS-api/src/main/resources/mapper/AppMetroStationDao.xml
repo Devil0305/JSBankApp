@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppMetroStationDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppMetroStationEntity" id="appMetroStationMap">
+        <result property="metroStationId" column="metro_station_id"/>
+        <result property="metroStationName" column="metro_station_name"/>
+        <result property="metroStationLineId" column="metro_station_line_id"/>
+        <result property="metroStationOrderInLine" column="metro_station_order_in_line"/>
+        <result property="metroStationLongitude" column="metro_station_longitude"/>
+        <result property="metroStationLatitude" column="metro_station_latitude"/>
+        <result property="metroStationCreateTime" column="metro_station_create_time"/>
+        <result property="metroStationUpdateTime" column="metro_station_update_time"/>
+        <result property="metroStationComment" column="metro_station_comment"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppNetworkDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppNetworkEntity" id="appNetworkMap">
+        <result property="networkId" column="network_id"/>
+        <result property="networkTypeId" column="network_type_id"/>
+        <result property="networkType" column="network_type"/>
+        <result property="networkName" column="network_name"/>
+        <result property="networkCode" column="network_code"/>
+        <result property="networkDistance" column="network_distance"/>
+        <result property="networkSign" column="network_sign"/>
+        <result property="networkLatitude" column="network_latitude"/>
+        <result property="networkLongitude" column="network_longitude"/>
+        <result property="networkPhone" column="network_phone"/>
+        <result property="networkMobile" column="network_mobile"/>
+        <result property="networkLogo" column="network_logo"/>
+        <result property="networkAddress" column="network_address"/>
+        <result property="networkShortName" column="network_short_name"/>
+        <result property="networkCityId" column="network_city_id"/>
+        <result property="networkProvinceId" column="network_province_id"/>
+        <result property="networkDistrictId" column="network_district_id"/>
+        <result property="networkDeleted" column="network_deleted"/>
+        <result property="networkShow" column="network_show"/>
+        <result property="networkDesc" column="network_desc"/>
+        <result property="networkCreateTime" column="network_create_time"/>
+        <result property="networkUpdateTime" column="network_update_time"/>
+    </resultMap>
+
+    <sql id="computedRange">
+        <if test="latitude != null and latitude != '' and longitude != null and longitude != ''">
+            ,IFNULL( round(6378.138*2*asin(sqrt(pow(sin(
+            (${latitude}*pi()/180-network_latitude*pi()/180)/2),2)+cos(${latitude}*pi()/180)*cos(network_latitude*pi()/180)*
+            pow(sin(
+            (${longitude}*pi()/180-network_longitude*pi()/180)/2),2)))*1000),999999999) as networkDistance,
+        </if>
+        <if test="latitude == null or latitude == '' or longitude == null or longitude == ''">
+            ,999999999 as networkDistance,
+        </if>
+    </sql>
+
+    <sql id="sqlLimit">
+        <if test="currPageNo != null and currPageNo >= 0 and pageSize != null and pageSize != 0">
+            limit #{currPageNo},#{limit}
+        </if>
+    </sql>
+
+    <select id="getCBBNetworkList" parameterType="com.pukanghealth.ao.AppNetworkAO" resultType="com.pukanghealth.entity.AppNetworkEntity">
+        SELECT
+        network_id,
+        network_type_id,
+        network_type,
+        network_name,
+        network_code
+        <include refid="computedRange"/>
+        network_sign,
+        network_latitude,
+        network_longitude,
+        network_phone,
+        network_mobile,
+        network_logo,
+        network_address,
+        network_short_name,
+        network_city_id,
+        network_province_id,
+        network_district_id,
+        network_deleted,
+        network_show,
+        network_desc,
+        network_create_time,
+        network_update_time
+        FROM
+        app_network
+        <where>
+            AND network_deleted = 0
+            AND network_type = 2
+            <if test="networkName != null and networkName != ''">
+                AND network_name LIKE CONCAT('%',#{networkName},'%')
+            </if>
+        </where>
+        ORDER BY
+        network_distance ASC,network_create_time DESC
+        <include refid="sqlLimit"/>
+    </select>
+
+    <select id="getCBBNetworkCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        app_network
+        <where>
+            AND network_deleted = 0
+            AND network_type = 2
+            <if test="networkName != null and networkName != ''">
+                AND network_name LIKE CONCAT('%',#{networkName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getSocialSecurityList" parameterType="com.pukanghealth.ao.AppNetworkAO" resultType="com.pukanghealth.entity.AppNetworkEntity">
+        SELECT
+        network_id,
+        network_type_id,
+        network_type,
+        network_name,
+        network_code
+        <include refid="computedRange"/>
+        network_sign,
+        network_latitude,
+        network_longitude,
+        network_phone,
+        network_mobile,
+        network_logo,
+        network_address,
+        network_short_name,
+        network_city_id,
+        network_province_id,
+        network_district_id,
+        network_deleted,
+        network_show,
+        network_desc,
+        network_create_time,
+        network_update_time
+        FROM
+        app_network
+        left join app_sys_province on network_province_id = province_id
+        left join app_sys_city on network_city_id = city_id
+        left join app_sys_district on network_district_id = district_id
+        <where>
+            AND network_deleted = 0
+            AND network_type = 1
+            <if test="networkName != null and networkName != ''">
+                AND network_name LIKE CONCAT('%',#{networkName},'%')
+            </if>
+            <if test="networkCityId != null">
+                AND network_city_id = #{networkCityId}
+            </if>
+            <if test="networkProvinceId != null">
+                AND network_province_id = #{networkProvinceId}
+            </if>
+            <if test="networkDistrictId != null">
+                AND network_district_id = #{networkDistrictId}
+            </if>
+            <if test="moduleIds != null">
+                network_id in
+                <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
+                    #{moduleIds}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY
+        network_distance ASC,network_create_time DESC
+        <include refid="sqlLimit"/>
+    </select>
+
+    <select id="getSocialSecurityCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        app_network
+        left join app_sys_province on network_province_id = province_id
+        left join app_sys_city on network_city_id = city_id
+        left join app_sys_district on network_district_id = district_id
+        <where>
+            AND network_deleted = 0
+            AND network_type = 1
+            <if test="networkName != null and networkName != ''">
+                AND network_name LIKE CONCAT('%',#{networkName},'%')
+            </if>
+            <if test="networkCityId != null">
+                AND network_city_id = #{networkCityId}
+            </if>
+            <if test="networkProvinceId != null">
+                AND network_province_id = #{networkProvinceId}
+            </if>
+            <if test="networkDistrictId != null">
+                AND network_district_id = #{networkDistrictId}
+            </if>
+            <if test="moduleIds != null">
+                network_id in
+                <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
+                    #{moduleIds}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

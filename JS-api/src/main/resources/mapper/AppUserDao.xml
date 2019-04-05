@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppUserDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppUserEntity" id="appUserMap">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="password" column="password"/>
+        <result property="userCode" column="user_code"/>
+        <result property="userSex" column="user_sex"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userProvince" column="user_province"/>
+        <result property="userCity" column="user_city"/>
+        <result property="userArea" column="user_area"/>
+        <result property="userCertId" column="user_cert_id"/>
+        <result property="userCertType" column="user_cert_type"/>
+        <result property="userAddress" column="user_address"/>
+        <result property="userBirthday" column="user_birthday"/>
+        <result property="userState" column="user_state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+<update id="updateMobileByUserId">
+    UPDATE  app_user set mobile = #{mobile} where user_id = #{userId}
+</update>
+
+</mapper>

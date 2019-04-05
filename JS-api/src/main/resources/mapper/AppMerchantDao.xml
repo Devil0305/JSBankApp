@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppMerchantDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppMerchantEntity" id="appMerchantMap">
+        <result property="merchantId" column="merchant_id"/>
+        <result property="merchantTypeId" column="merchant_type_id"/>
+        <result property="merchantName" column="merchant_name"/>
+        <result property="merchantCode" column="merchant_code"/>
+        <result property="merchantDistance" column="merchant_distance"/>
+        <result property="merchantSign" column="merchant_sign"/>
+        <result property="merchantLatitude" column="merchant_latitude"/>
+        <result property="merchantLongitude" column="merchant_longitude"/>
+        <result property="merchantPhone" column="merchant_phone"/>
+        <result property="merchantMobile" column="merchant_mobile"/>
+        <result property="merchantLogo" column="merchant_logo"/>
+        <result property="merchantAddress" column="merchant_address"/>
+        <result property="merchantShortName" column="merchant_short_name"/>
+        <result property="merchantCityId" column="merchant_city_id"/>
+        <result property="merchantProvinceId" column="merchant_province_id"/>
+        <result property="merchantDistrictId" column="merchant_district_id"/>
+        <result property="merchantDeleted" column="merchant_deleted"/>
+        <result property="merchantShow" column="merchant_show"/>
+        <result property="merchantDesc" column="merchant_desc"/>
+        <result property="merchantCreateTime" column="merchant_create_time"/>
+        <result property="merchantUpdateTime" column="merchant_update_time"/>
+    </resultMap>
+
+    <select id="getMerchantList" parameterType="com.pukanghealth.ao.AppMerchantAO"
+            resultType="com.pukanghealth.entity.AppMerchantEntity">
+        SELECT merchant_id,
+        merchant_type_id,
+        merchant_name,
+        merchant_code
+        <if test="latitude != null and latitude != '' and longitude != null and longitude != ''">
+            ,IFNULL( round(6378.138*2*asin(sqrt(pow(sin(
+            (${latitude}*pi()/180-merchant_latitude*pi()/180)/2),2)+cos(${latitude}*pi()/180)*cos(merchant_latitude*pi()/180)*
+            pow(sin(
+            (${longitude}*pi()/180-merchant_longitude*pi()/180)/2),2)))*1000),999999999) as merchantDistance,
+        </if>
+        <if test="latitude == null or latitude == '' or longitude == null or longitude == ''">
+            ,999999999 as merchantDistance,
+        </if>
+        merchant_sign,
+        merchant_latitude,
+        merchant_longitude,
+        merchant_phone,
+        merchant_mobile,
+        merchant_logo,
+        merchant_address,
+        merchant_short_name,
+        merchant_city_id,
+        merchant_province_id,
+        merchant_district_id,
+        merchant_deleted,
+        merchant_show,
+        merchant_desc,
+        merchant_create_time,
+        merchant_update_time
+        FROM app_merchant m
+        LEFT JOIN app_sys_province p ON m.merchant_province_id = p.province_id
+        LEFT JOIN app_sys_city c ON m.merchant_city_id = c.city_id
+        LEFT JOIN app_sys_district d ON m.merchant_district_id = d.district_id
+        <where>
+            AND m.merchant_deleted = 0
+            <if test="merchantName != null and merchantName != ''">
+                AND merchant_name LIKE CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test="merchantCityId != null">
+                AND merchant_city_id = #{merchantCityId}
+            </if>
+            <if test="merchantProvinceId != null">
+                AND merchant_province_id = #{merchantProvinceId}
+            </if>
+            <if test="merchantDistrictId != null">
+                AND merchant_district_id = #{merchantDistrictId}
+            </if>
+            <if test="moduleIds != null">
+                merchant_id in
+                <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
+                    #{moduleIds}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY merchant_distance ASC,merchant_create_time DESC
+        <include refid="com.pukanghealth.dao.AppNetworkDao.sqlLimit"/>
+    </select>
+
+    <select id="getMerchantCount" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM app_merchant m
+        LEFT JOIN app_sys_province p ON m.merchant_province_id = p.province_id
+        LEFT JOIN app_sys_city c ON m.merchant_city_id = c.city_id
+        LEFT JOIN app_sys_district d ON m.merchant_district_id = d.district_id
+        <where>
+            AND m.merchant_deleted = 0
+            <if test="merchantName != null and merchantName != ''">
+                AND merchant_name LIKE CONCAT('%',#{merchantName},'%')
+            </if>
+            <if test="merchantCityId != null">
+                AND merchant_city_id = #{merchantCityId}
+            </if>
+            <if test="merchantProvinceId != null">
+                AND merchant_province_id = #{merchantProvinceId}
+            </if>
+            <if test="merchantDistrictId != null">
+                AND merchant_district_id = #{merchantDistrictId}
+            </if>
+            <if test="moduleIds != null">
+                merchant_id in
+                <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
+                    #{moduleIds}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

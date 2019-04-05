@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppFeatureDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppFeatureEntity" id="appFeatureMap">
+        <result property="featureId" column="feature_id"/>
+        <result property="featureName" column="feature_name"/>
+        <result property="featureShow" column="feature_show"/>
+        <result property="featureCreateTime" column="feature_create_time"/>
+        <result property="featureUpdateTime" column="feature_update_time"/>
+        <result property="featureKey" column="feature_key"/>
+        <result property="featureShowSort" column="feature_show_sort"/>
+        <result property="featureType" column="feature_type"/>
+        <result property="featureParentId" column="feature_parent_id"/>
+    </resultMap>
+
+
+</mapper>

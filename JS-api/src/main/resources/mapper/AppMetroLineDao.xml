@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppMetroLineDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppMetroLineEntity" id="appMetroLineMap">
+        <result property="metroLineId" column="metro_line_id"/>
+        <result property="metroLineName" column="metro_line_name"/>
+        <result property="metroLineOrderInCity" column="metro_line_order_in_city"/>
+        <result property="metroLineCityId" column="metro_line_city_id"/>
+        <result property="metroLineCreateTime" column="metro_line_create_time"/>
+        <result property="metroLineUpdateTime" column="metro_line_update_time"/>
+        <result property="metroLineComment" column="metro_line_comment"/>
+    </resultMap>
+    <resultMap id="MetroLineWithStationResult" type="com.pukanghealth.bo.MetroLineWithStationBO"
+               extends="appMetroLineMap">
+    <collection property="stations" resultMap="com.pukanghealth.dao.AppMetroStationDao.appMetroStationMap"/>
+    </resultMap>
+    <select id="getMetroStationsByCity" resultMap="MetroLineWithStationResult">
+        select pml.*,pms.*
+        from app_metro_line pml
+        left join app_metro_station pms on pms.metro_station_line_id=pml.metro_line_id
+        where pml.metro_line_city_id=#{city}
+        order by
+        pml.metro_line_order_in_city asc,pms.metro_station_order_in_line asc
+    </select>
+
+</mapper>

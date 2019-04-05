@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppOrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppOrderEntity" id="appOrderMap">
+        <result property="orderId" column="order_id"/>
+        <result property="orderCode" column="order_code"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderGoodsId" column="order_goods_id"/>
+        <result property="orderTradindNo" column="order_tradind_no"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="orderAmt" column="order_amt"/>
+        <result property="orderActualAmt" column="order_actual_amt"/>
+        <result property="orderGoodsQuantity" column="order_goods_quantity"/>
+        <result property="createTime" column="create_time"/>
+        <result property="orderDetailId" column="order_detail_id"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="hide" column="hide"/>
+    </resultMap>
+
+
+</mapper>

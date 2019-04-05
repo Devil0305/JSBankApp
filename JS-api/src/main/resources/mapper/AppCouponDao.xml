@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppCouponDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppCouponEntity" id="appCouponMap">
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="couponLogo" column="coupon_logo"/>
+        <result property="couponMerchantCode" column="coupon_merchant_code"/>
+        <result property="couponMerchantName" column="coupon_merchant_name"/>
+        <result property="couponTotal" column="coupon_total"/>
+        <result property="couponCount" column="coupon_count"/>
+        <result property="couponBeginTime" column="coupon_begin_time"/>
+        <result property="couponInvalidTime" column="coupon_invalid_time"/>
+        <result property="couponEffectiveTime" column="coupon_effective_time"/>
+        <result property="couponEndTime" column="coupon_end_time"/>
+        <result property="couponCouponPrice" column="coupon_coupon_price"/>
+        <result property="couponDetail" column="coupon_detail"/>
+        <result property="couponDesc" column="coupon_desc"/>
+        <result property="couponPrice" column="coupon_price"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="couponStatus" column="coupon_status"/>
+        <result property="couponDeleted" column="coupon_deleted"/>
+    </resultMap>
+
+
+</mapper>

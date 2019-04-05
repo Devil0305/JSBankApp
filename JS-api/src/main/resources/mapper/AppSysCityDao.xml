@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppSysCityDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppSysCityEntity" id="appSysCityMap">
+        <result property="cityId" column="city_id"/>
+        <result property="cityProvince" column="city_province"/>
+        <result property="cityName" column="city_name"/>
+        <result property="cityType" column="city_type"/>
+        <result property="cityLevel" column="city_level"/>
+        <result property="cityParentId" column="city_parent_id"/>
+        <result property="cityOrder" column="city_order"/>
+        <result property="cityPinyin" column="city_pinyin"/>
+        <result property="cityDeleted" column="city_deleted"/>
+        <result property="cityStatus" column="city_status"/>
+        <result property="cityMemo" column="city_memo"/>
+        <result property="cityUpdatetime" column="city_updatetime"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppImageSettingDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppImageSettingEntity" id="appImageSettingMap">
+        <result property="imageId" column="image_id"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="imageSort" column="image_sort"/>
+        <result property="imageBeginTime" column="image_begin_time"/>
+        <result property="imageEndTime" column="image_end_time"/>
+        <result property="imageRefUrl" column="image_ref_url"/>
+        <result property="imageTerminal" column="image_terminal"/>
+        <result property="imageDeleted" column="image_deleted"/>
+        <result property="imageDescription" column="image_description"/>
+        <result property="imageJumpUrl" column="image_jump_url"/>
+        <result property="imageType" column="image_type"/>
+    </resultMap>
+
+
+</mapper>

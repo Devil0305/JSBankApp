@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppSysProvinceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppSysProvinceEntity" id="appSysProvinceMap">
+        <result property="provinceId" column="province_id"/>
+        <result property="provinceType" column="province_type"/>
+        <result property="provinceOrder" column="province_order"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="provinceShortname" column="province_shortName"/>
+        <result property="provincePinyin" column="province_pinyin"/>
+        <result property="provinceStatus" column="province_status"/>
+        <result property="provinceDeleted" column="province_deleted"/>
+        <result property="provinceUpdatetime" column="province_updatetime"/>
+    </resultMap>
+
+
+</mapper>

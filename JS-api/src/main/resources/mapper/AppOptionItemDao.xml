@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppOptionItemDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppOptionItemEntity" id="appOptionItemMap">
+        <result property="optionId" column="option_id"/>
+        <result property="optionGroupId" column="option_group_id"/>
+        <result property="optionModuleId" column="option_module_id"/>
+        <result property="optionItemCode" column="option_item_code"/>
+        <result property="optionItemValue" column="option_item_value"/>
+        <result property="optionDisplayValue" column="option_display_value"/>
+        <result property="optionItemDiscription" column="option_item_discription"/>
+        <result property="optionOrder" column="option_order"/>
+    </resultMap>
+
+    <select id="getOptionItemsByParam" resultMap="appOptionItemMap">
+        select
+        *
+        from pkec_option_item
+        where option_group_id=#{0}
+        and option_item_value &amp; #{1}>0
+    </select>
+
+</mapper>

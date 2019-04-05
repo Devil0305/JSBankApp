@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pukanghealth.dao.AppRecipientAddressDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.pukanghealth.entity.AppRecipientAddressEntity" id="appRecipientAddressMap">
+        <result property="recipientId" column="recipient_id"/>
+        <result property="recipientUserId" column="recipient_user_id"/>
+        <result property="recipientName" column="recipient_name"/>
+        <result property="recipientMobile" column="recipient_mobile"/>
+        <result property="recipientAdderss" column="recipient_adderss"/>
+        <result property="recipientPovinceId" column="recipient_povince_id"/>
+        <result property="recipientCityId" column="recipient_city_id"/>
+        <result property="recipientDistrictId" column="recipient_district_id"/>
+        <result property="recipientAdderssDetail" column="recipient_adderss_detail"/>
+        <result property="createTime" column="create_time"/>
+        <result property="recipientDeleted" column="recipient_deleted"/>
+        <result property="recipientStatus" column="recipient_status"/>
+    </resultMap>
+
+    <update id="updateRecipientDeletedById">
+        UPDATE app_recipient_address SET recipient_deleted = 1 WHERE recipient_id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>
