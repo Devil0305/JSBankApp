@@ -1,0 +1,14 @@
+version: '2'
+services:
+  pukang-admin:
+    image: pukang/admin
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.profiles.active=dev
+  pukang-api:
+    image: pukang/api
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.profiles.active=dev
