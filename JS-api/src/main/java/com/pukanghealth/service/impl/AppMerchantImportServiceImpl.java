@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pukanghealth.common.exception.RRException;
 import com.pukanghealth.dao.AppMerchantDao;
+import com.pukanghealth.dao.AppModuleOptionDao;
+import com.pukanghealth.dao.AppOptionItemDao;
 import com.pukanghealth.entity.AppMerchantEntity;
+import com.pukanghealth.entity.AppModuleOptionEntity;
+import com.pukanghealth.entity.AppOptionItemEntity;
 import com.pukanghealth.service.AppMerchantImportService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -24,6 +29,12 @@ import java.util.List;
 @Service
 public class AppMerchantImportServiceImpl extends ServiceImpl<AppMerchantDao, AppMerchantEntity> implements AppMerchantImportService {
     private Logger logger = LoggerFactory.getLogger(AppNetworkImportServiceImpl.class);
+
+    @Resource
+    private AppModuleOptionDao appModuleOptionDao;
+
+    @Resource
+    private AppOptionItemDao appOptionItemDao;
 
     @Override
     public Boolean batchImportMerchant(MultipartFile file) {
@@ -163,16 +174,30 @@ public class AppMerchantImportServiceImpl extends ServiceImpl<AppMerchantDao, Ap
             appMerchantEntity.setMerchantUpdateTime(update);
             appMerchantEntityList.add(appMerchantEntity);
         }
-        for (AppMerchantEntity appMerchantEntityResord : appMerchantEntityList) {
-            String merchantCode = appMerchantEntityResord.getMerchantCode();
+        for (AppMerchantEntity appMerchantEntityResort : appMerchantEntityList) {
+            String merchantCode = appMerchantEntityResort.getMerchantCode();
+            AppModuleOptionEntity appModuleOptionEntity = new AppModuleOptionEntity();
+            AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectOne(new QueryWrapper<AppOptionItemEntity>().eq("optionModuleId", 2));
 
+            appModuleOptionEntity.setModuleId(appMerchantEntityResort.getMerchantId());
+            appModuleOptionEntity.setOptionId(appOptionItemEntity.getOptionId());
+            appModuleOptionEntity.setType(2);
             Integer count = baseMapper.selectCount(new QueryWrapper<AppMerchantEntity>().eq("merchant_code", merchantCode));
             if (count == 0) {
-                baseMapper.insert(appMerchantEntityResord);
-                logger.info("插入" + appMerchantEntityResord);
+                baseMapper.insert(appMerchantEntityResort);
+                logger.info("插入" + appMerchantEntityResort);
+
             } else {
-                baseMapper.update(appMerchantEntityResord, new QueryWrapper<AppMerchantEntity>().eq("merchant_code", merchantCode));
-                logger.info("更新" + appMerchantEntityResord);
+                baseMapper.update(appMerchantEntityResort, new QueryWrapper<AppMerchantEntity>().eq("merchant_code", merchantCode));
+                logger.info("更新" + appMerchantEntityResort);
+
+            }
+            if (appModuleOptionEntity.getOptionId() == null){
+                appModuleOptionDao.insert(appModuleOptionEntity);
+                logger.info("插入" + appModuleOptionEntity);
+            }else {
+                appModuleOptionDao.update(appModuleOptionEntity, new QueryWrapper<AppModuleOptionEntity>().eq("optionId",appModuleOptionEntity.getOptionId()));
+                logger.info("更新" + appModuleOptionEntity);
             }
         }
         return notNull;
