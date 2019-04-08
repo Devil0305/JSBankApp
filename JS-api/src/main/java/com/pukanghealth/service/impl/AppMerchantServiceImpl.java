@@ -21,10 +21,6 @@ import com.pukanghealth.common.utils.PageUtils;
 
 import javax.annotation.Resource;
 
-/**
- * @Author: liukang
- * @Date: 2019/4/7 15:31
- */
 
 @Service("appMerchantService")
 public class AppMerchantServiceImpl extends ServiceImpl<AppMerchantDao, AppMerchantEntity> implements AppMerchantService {
@@ -44,32 +40,27 @@ public class AppMerchantServiceImpl extends ServiceImpl<AppMerchantDao, AppMerch
         if (appMerchantAO.getOptionIds() != null) {
             optionIds = appMerchantAO.getOptionIds();
             for (Integer optionId : optionIds) {
-               // Integer moduleId = appModuleOptionService.list(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId)).get(0).getModuleId();
-                Integer moduleId = appModuleOptionDao.selectOne(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId)).getModuleId();
-                moduleIds.add(moduleId);
+                List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId));
+                for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
+                    Integer moduleId = appModuleOptionEntity.getModuleId();
+                    moduleIds.add(moduleId);
+                }
             }
         }
         appMerchantAO.setModuleIds(moduleIds);
         List<AppMerchantEntity> appMerchantEntities = appMerchantDao.getMerchantList(appMerchantAO);
+        int totalCount = appMerchantDao.getMerchantCount(appMerchantAO);
         List<AppMerchantVO> appMerchantVOList = new ArrayList<>();
-        AppMerchantVO appMerchantVO = new AppMerchantVO();
         for (AppMerchantEntity appMerchantEntity : appMerchantEntities) {
-            //AppModuleOptionEntity appModuleOptionEntity = appModuleOptionService.getOne(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appMerchantEntity.getMerchantId()));
-            AppModuleOptionEntity appModuleOptionEntity = appModuleOptionDao.selectOne(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appMerchantEntity.getMerchantId()));
-            //AppOptionItemEntity appOptionItemEntity = appOptionItemService.query().getBaseMapper().selectById(appModuleOptionEntity.getOptionId());
-            AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectById(appModuleOptionEntity.getOptionId());
-//            appMerchantVO.setMerchantAddress(appMerchantEntity.getMerchantAddress());
-//            appMerchantVO.setMerchantCityId(appMerchantEntity.getMerchantCityId());
-//            appMerchantVO.setMerchantCode(appMerchantEntity.getMerchantCode());
-//            appMerchantVO.setMerchantCreateTime(appMerchantEntity.getMerchantCreateTime());
-//            appMerchantVO.setMerchantDeleted(appMerchantEntity.getMerchantDeleted());
-//            appMerchantVO.setMerchantDesc(appMerchantEntity.getMerchantDesc());
-//            appMerchantVO.setMerchantDistance(appMerchantEntity.getMerchantDistance());
+            AppMerchantVO appMerchantVO = new AppMerchantVO();
             BeanUtils.copyProperties(appMerchantEntity, appMerchantVO);
-            appMerchantVO.setAppMerchantTypeName(appOptionItemEntity.getOptionItemValue());
+            List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appMerchantEntity.getMerchantId()).eq("type", 2));
+            for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
+                AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectById(appModuleOptionEntity.getOptionId());
+                appMerchantVO.setAppMerchantTypeName(appOptionItemEntity.getOptionDisplayValue());
+            }
             appMerchantVOList.add(appMerchantVO);
         }
-        int totalCount = appMerchantDao.getMerchantCount(appMerchantAO);
         return new PageUtils(appMerchantVOList, totalCount, appMerchantAO.getCurrPageNo(), appMerchantAO.getPageSize());
     }
 
