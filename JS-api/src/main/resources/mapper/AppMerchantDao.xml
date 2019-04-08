@@ -77,12 +77,13 @@
             <if test="merchantDistrictId != null">
                 AND merchant_district_id = #{merchantDistrictId}
             </if>
-            <if test="moduleIds != null">
-                merchant_id in
+            <if test="moduleIds != null and moduleIds.size != 0">
+                AND merchant_id IN
                 <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
-                    #{moduleIds}
+                    #{itemOptionTypes}
                 </foreach>
             </if>
+
         </where>
         ORDER BY merchant_distance ASC,merchant_create_time DESC
         <include refid="com.pukanghealth.dao.AppNetworkDao.sqlLimit"/>
@@ -108,10 +109,10 @@
             <if test="merchantDistrictId != null">
                 AND merchant_district_id = #{merchantDistrictId}
             </if>
-            <if test="moduleIds != null">
-                merchant_id in
+            <if test="moduleIds != null and moduleIds.size != 0">
+                AND merchant_id IN
                 <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
-                    #{moduleIds}
+                    #{itemOptionTypes}
                 </foreach>
             </if>
         </where>
