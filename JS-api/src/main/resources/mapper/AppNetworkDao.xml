@@ -6,7 +6,6 @@
     <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.pukanghealth.entity.AppNetworkEntity" id="appNetworkMap">
         <result property="networkId" column="network_id"/>
-        <result property="networkTypeId" column="network_type_id"/>
         <result property="networkType" column="network_type"/>
         <result property="networkName" column="network_name"/>
         <result property="networkCode" column="network_code"/>
@@ -50,7 +49,6 @@
     <select id="getCBBNetworkList" parameterType="com.pukanghealth.ao.AppNetworkAO" resultType="com.pukanghealth.entity.AppNetworkEntity">
         SELECT
         network_id,
-        network_type_id,
         network_type,
         network_name,
         network_code
@@ -102,7 +100,6 @@
     <select id="getSocialSecurityList" parameterType="com.pukanghealth.ao.AppNetworkAO" resultType="com.pukanghealth.entity.AppNetworkEntity">
         SELECT
         network_id,
-        network_type_id,
         network_type,
         network_name,
         network_code
@@ -143,10 +140,10 @@
             <if test="networkDistrictId != null">
                 AND network_district_id = #{networkDistrictId}
             </if>
-            <if test="moduleIds != null">
-                network_id in
+            <if test="moduleIds != null and moduleIds.size != 0">
+                AND network_id IN
                 <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
-                    #{moduleIds}
+                    #{itemOptionTypes}
                 </foreach>
             </if>
         </where>
@@ -178,10 +175,10 @@
             <if test="networkDistrictId != null">
                 AND network_district_id = #{networkDistrictId}
             </if>
-            <if test="moduleIds != null">
-                network_id in
+            <if test="moduleIds != null and moduleIds.size != 0">
+                AND network_id IN
                 <foreach collection="moduleIds" index="index" item="itemOptionTypes" open="(" separator="," close=")">
-                    #{moduleIds}
+                    #{itemOptionTypes}
                 </foreach>
             </if>
         </where>
