@@ -13,7 +13,7 @@ import java.util.Date;
  * 
  * @author wangli
  * @email 
- * @date 2019-04-02 15:25:03
+ * @date 2019-04-08 11:24:31
  */
 @Data
 @TableName("app_network")
@@ -25,10 +25,6 @@ public class AppNetworkEntity implements Serializable {
 	 */
 	@TableId
 	private Integer networkId;
-	/**
-	 * 关联option_item
-	 */
-	private Integer networkTypeId;
 	/**
 	 * 1：社保网点   2：建行网点
 	 */
