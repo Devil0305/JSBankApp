@@ -45,28 +45,33 @@ public class AppNetworkServiceImpl extends ServiceImpl<AppNetworkDao, AppNetwork
     public PageUtils querySocialSecurityPage(AppNetworkAO appNetworkAO) {
         List<Integer> optionIds;
         List<Integer> moduleIds = new ArrayList<>();
-        if (appNetworkAO.getOptionIds() != null){
+        if (appNetworkAO.getOptionIds() != null) {
             optionIds = appNetworkAO.getOptionIds();
-            for (Integer optionId : optionIds){
-                Integer moduleId = appModuleOptionDao.selectOne(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId)).getModuleId();
-                moduleIds.add(moduleId);
+            for (Integer optionId : optionIds) {
+                List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId));
+                for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
+                    Integer moduleId = appModuleOptionEntity.getModuleId();
+                    moduleIds.add(moduleId);
+                }
             }
         }
         appNetworkAO.setModuleIds(moduleIds);
         List<AppNetworkVO> appNetworkVOList = new ArrayList<>();
         List<AppNetworkEntity> appNetworkEntityList = appNetworkDao.getSocialSecurityList(appNetworkAO);
-        AppNetworkVO appNetworkVO = new AppNetworkVO();
-        for (AppNetworkEntity appNetworkEntity : appNetworkEntityList){
-            AppModuleOptionEntity appModuleOptionEntity = appModuleOptionDao.selectOne(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appNetworkEntity.getNetworkId()));
-            AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectById(appModuleOptionEntity.getOptionId());
+        for (AppNetworkEntity appNetworkEntity : appNetworkEntityList) {
+            AppNetworkVO appNetworkVO = new AppNetworkVO();
             BeanUtils.copyProperties(appNetworkEntity, appNetworkVO);
-            appNetworkVO.setAppNetworkTypeName(appOptionItemEntity.getOptionItemValue());
+            List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appNetworkEntity.getNetworkId()).eq("type", 1));
+            for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
+                AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectById(appModuleOptionEntity.getOptionId());
+                appNetworkVO.setAppNetworkTypeName(appOptionItemEntity.getOptionDisplayValue());
+            }
+
             appNetworkVOList.add(appNetworkVO);
         }
         int totalCount = appNetworkDao.getSocialSecurityCount(appNetworkAO);
-        return new PageUtils(appNetworkVOList, totalCount,appNetworkAO.getPageSize(), appNetworkAO.getCurrPageNo());
+        return new PageUtils(appNetworkVOList, totalCount, appNetworkAO.getPageSize(), appNetworkAO.getCurrPageNo());
     }
-
 
 
 }
