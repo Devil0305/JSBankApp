@@ -35,19 +35,30 @@ public class AppMerchantServiceImpl extends ServiceImpl<AppMerchantDao, AppMerch
 
     @Override
     public PageUtils queryMerchantPage(AppMerchantAO appMerchantAO) {
+        if (appMerchantAO.getCurrPageNo() == 0){
+            appMerchantAO.setCurrPageNo(1);
+        }
+        if (appMerchantAO.getPageSize() == 0){
+            appMerchantAO.setPageSize(10);
+        }
         List<Integer> optionIds;
         List<Integer> moduleIds = new ArrayList<>();
-        if (appMerchantAO.getOptionIds() != null) {
+        if (appMerchantAO.getOptionIds() != null && appMerchantAO.getOptionIds().size() > 0) {
             optionIds = appMerchantAO.getOptionIds();
             for (Integer optionId : optionIds) {
-                List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId));
+                List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("option_id", optionId).eq("type",2));
+                if (null == appModuleOptionEntityList || appModuleOptionEntityList.size() == 0){
+                    return null;
+                }
                 for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
                     Integer moduleId = appModuleOptionEntity.getModuleId();
                     moduleIds.add(moduleId);
                 }
             }
         }
-        appMerchantAO.setModuleIds(moduleIds);
+        if (moduleIds.size() > 0){
+            appMerchantAO.setModuleIds(moduleIds);
+        }
         List<AppMerchantEntity> appMerchantEntities = appMerchantDao.getMerchantList(appMerchantAO);
         int totalCount = appMerchantDao.getMerchantCount(appMerchantAO);
         List<AppMerchantVO> appMerchantVOList = new ArrayList<>();
@@ -56,12 +67,14 @@ public class AppMerchantServiceImpl extends ServiceImpl<AppMerchantDao, AppMerch
             BeanUtils.copyProperties(appMerchantEntity, appMerchantVO);
             List<AppModuleOptionEntity> appModuleOptionEntityList = appModuleOptionDao.selectList(new QueryWrapper<AppModuleOptionEntity>().eq("module_id", appMerchantEntity.getMerchantId()).eq("type", 2));
             for (AppModuleOptionEntity appModuleOptionEntity : appModuleOptionEntityList) {
-                AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectById(appModuleOptionEntity.getOptionId());
-                appMerchantVO.setAppMerchantTypeName(appOptionItemEntity.getOptionDisplayValue());
+                AppOptionItemEntity appOptionItemEntity = appOptionItemDao.selectOne(new QueryWrapper<AppOptionItemEntity>().eq("option_id", appModuleOptionEntity.getOptionId()).eq("option_module_id", 2));
+                if (null != appOptionItemEntity){
+                    appMerchantVO.setAppMerchantTypeName(appOptionItemEntity.getOptionDisplayValue());
+                }
             }
             appMerchantVOList.add(appMerchantVO);
         }
-        return new PageUtils(appMerchantVOList, totalCount, appMerchantAO.getCurrPageNo(), appMerchantAO.getPageSize());
+        return new PageUtils(appMerchantVOList, totalCount, appMerchantAO.getPageSize(), appMerchantAO.getCurrPageNo());
     }
 
 }
